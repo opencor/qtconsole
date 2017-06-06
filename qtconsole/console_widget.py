@@ -25,6 +25,20 @@ from .completion_plain import CompletionPlain
 from .kill_ring import QtKillRing
 
 
+def new_action(text, parent, **kwargs):
+    action = QtGui.QAction(text, parent)
+    for (k, v) in kwargs.items():
+        if k == 'shortcut':
+            action.setShortcut(QtGui.QKeySequence(v))
+        elif k == 'shortcutContext':
+            action.setShortcutContext(v)
+        elif k == 'statusTip':
+            action.setStatusTip(v)
+        elif k == 'triggered':
+            action.triggered.connect(v)
+    return action
+
+
 def is_letter_or_number(char):
     """ Returns whether the specified unicode character is a letter or a number.
     """
@@ -321,7 +335,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         self.addAction(action)
         self.select_all_action = action
 
-        self.increase_font_size = QtGui.QAction("Bigger Font",
+        self.increase_font_size = new_action("Bigger Font",
                 self,
                 shortcut=QtGui.QKeySequence.ZoomIn,
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
@@ -329,7 +343,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 triggered=self._increase_font_size)
         self.addAction(self.increase_font_size)
 
-        self.decrease_font_size = QtGui.QAction("Smaller Font",
+        self.decrease_font_size = new_action("Smaller Font",
                 self,
                 shortcut=QtGui.QKeySequence.ZoomOut,
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
@@ -337,7 +351,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 triggered=self._decrease_font_size)
         self.addAction(self.decrease_font_size)
 
-        self.reset_font_size = QtGui.QAction("Normal Font",
+        self.reset_font_size = new_action("Normal Font",
                 self,
                 shortcut=QtGui.QKeySequence("Ctrl+0"),
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
