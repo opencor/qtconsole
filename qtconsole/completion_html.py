@@ -192,7 +192,7 @@ class CompletionHtml(QtGui.QWidget):
             elif etype == QtCore.QEvent.FocusOut:
                 self.cancel_completion()
 
-        return super(CompletionHtml, self).eventFilter(obj, event)
+        return QtGui.QWidget.eventFilter(self, obj, event)
 
     #--------------------------------------------------------------------------
     # 'CompletionHtml' interface
