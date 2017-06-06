@@ -1033,8 +1033,9 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 cursor.insertText(prefix)
                 current_pos = cursor.position()
 
-            self._completion_widget.show_items(cursor, items,
-                                               prefix_length=len(prefix))
+            cursor.movePosition(QtGui.QTextCursor.Left, len(prefix))
+            self._completion_widget.show_items(cursor, items)
+
 
     def _fill_temporary_buffer(self, cursor, text, html=False):
         """fill the area below the active editting zone with text"""
@@ -1390,9 +1391,9 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 if line > self._get_prompt_cursor().blockNumber() and \
                         col == len(self._continuation_prompt):
                     self._control.moveCursor(QtGui.QTextCursor.PreviousBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     self._control.moveCursor(QtGui.QTextCursor.EndOfBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     intercepted = True
 
                 # Regular left movement
@@ -1402,14 +1403,14 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
             elif key == QtCore.Qt.Key_Right:
                 #original_block_number = cursor.blockNumber()
                 if position == self._get_line_end_pos():
-                    cursor.movePosition(QtGui.QTextCursor.NextBlock, mode=anchormode)
+                    cursor.movePosition(QtGui.QTextCursor.NextBlock, anchormode)
                     cursor.movePosition(QtGui.QTextCursor.Right,
-                                        mode=anchormode,
-                                        n=len(self._continuation_prompt))
+                                        anchormode,
+                                        len(self._continuation_prompt))
                     self._control.setTextCursor(cursor)
                 else:
                     self._control.moveCursor(QtGui.QTextCursor.Right,
-                                             mode=anchormode)
+                                             anchormode)
                 intercepted = True
 
             elif key == QtCore.Qt.Key_Home:
