@@ -451,7 +451,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
             anchor = self._control.anchorAt(event.pos())
             QtGui.QToolTip.showText(event.globalPos(), anchor)
 
-        return super(ConsoleWidget, self).eventFilter(obj, event)
+        return QtGui.QWidget.eventFilter(self, obj, event)
 
     #---------------------------------------------------------------------------
     # 'QWidget' interface

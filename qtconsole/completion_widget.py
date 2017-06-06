@@ -56,7 +56,7 @@ class CompletionWidget(QtGui.QListWidget):
                 else:
                     self.cancel_completion()
 
-        return super(CompletionWidget, self).eventFilter(obj, event)
+        return QtGui.QListWidget.eventFilter(self, obj, event)
 
     def keyPressEvent(self, event):
         key = event.key()
@@ -68,7 +68,7 @@ class CompletionWidget(QtGui.QListWidget):
         elif key in (QtCore.Qt.Key_Up, QtCore.Qt.Key_Down,
                      QtCore.Qt.Key_PageUp, QtCore.Qt.Key_PageDown,
                      QtCore.Qt.Key_Home, QtCore.Qt.Key_End):
-            return super(CompletionWidget, self).keyPressEvent(event)
+            return QtGui.QListWidget.keyPressEvent(self, event)
         else:
             QtGui.QApplication.sendEvent(self._text_edit, event)
 
@@ -79,14 +79,14 @@ class CompletionWidget(QtGui.QListWidget):
     def hideEvent(self, event):
         """ Reimplemented to disconnect signal handlers and event filter.
         """
-        super(CompletionWidget, self).hideEvent(event)
+        QtGui.QListWidget.hideEvent(self, event)
         self._text_edit.cursorPositionChanged.disconnect(self._update_current)
         self.removeEventFilter(self)
 
     def showEvent(self, event):
         """ Reimplemented to connect signal handlers and event filter.
         """
-        super(CompletionWidget, self).showEvent(event)
+        QtGui.QListWidget.showEvent(self, event)
         self._text_edit.cursorPositionChanged.connect(self._update_current)
         self.installEventFilter(self)
 
