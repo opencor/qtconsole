@@ -157,17 +157,21 @@ class JupyterWidget(IPythonWidget):
             cursor_pos = self._get_input_buffer_cursor_pos()
             if end < cursor_pos:
                 cursor.movePosition(QtGui.QTextCursor.Left,
-                                    n=(cursor_pos - end))
+                                    QtGui.QTextCursor.MoveAnchor,
+                                    cursor_pos - end)
             elif end > cursor_pos:
                 cursor.movePosition(QtGui.QTextCursor.Right,
-                                    n=(end - cursor_pos))
+                                    QtGui.QTextCursor.MoveAnchor,
+                                    end - cursor_pos)
             # This line actually applies the move to control's cursor
             self._control.setTextCursor(cursor)
 
             offset = end - start
             # Move the local cursor object to the start of the match and
             # complete.
-            cursor.movePosition(QtGui.QTextCursor.Left, n=offset)
+            cursor.movePosition(QtGui.QTextCursor.Left,
+                                QtGui.QTextCursor.MoveAnchor,
+                                offset)
             self._complete_with_items(cursor, matches)
 
     def _handle_execute_reply(self, msg):

@@ -112,7 +112,8 @@ class HistoryConsoleWidget(ConsoleWidget):
             cursor = self._get_prompt_cursor()
             if self._history_prefix:
                 cursor.movePosition(QtGui.QTextCursor.Right,
-                                    n=len(self._history_prefix))
+                                    QtGui.QTextCursor.MoveAnchor,
+                                    len(self._history_prefix))
             else:
                 cursor.movePosition(QtGui.QTextCursor.EndOfBlock)
             self._set_cursor(cursor)
@@ -142,7 +143,8 @@ class HistoryConsoleWidget(ConsoleWidget):
             if self._history_prefix and replaced:
                 cursor = self._get_prompt_cursor()
                 cursor.movePosition(QtGui.QTextCursor.Right,
-                                    n=len(self._history_prefix))
+                                    QtGui.QTextCursor.MoveAnchor,
+                                    len(self._history_prefix))
                 self._set_cursor(cursor)
 
             return False

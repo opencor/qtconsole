@@ -111,7 +111,7 @@ class QtKillRing(QtCore.QObject):
                 cursor = self._text_edit.textCursor()
                 cursor.movePosition(QtGui.QTextCursor.Left,
                                     QtGui.QTextCursor.KeepAnchor,
-                                    n = len(self._prev_yank))
+                                    len(self._prev_yank))
                 cursor.insertText(text)
                 self._prev_yank = text
 

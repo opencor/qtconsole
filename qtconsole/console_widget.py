@@ -969,7 +969,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 cursor.insertText(prefix)
                 current_pos = cursor.position()
 
-            cursor.movePosition(QtGui.QTextCursor.Left, n=len(prefix))
+            cursor.movePosition(QtGui.QTextCursor.Left, len(prefix))
             self._completion_widget.show_items(cursor, items)
 
 
@@ -1328,9 +1328,9 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 if line > self._get_prompt_cursor().blockNumber() and \
                         col == len(self._continuation_prompt):
                     self._control.moveCursor(QtGui.QTextCursor.PreviousBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     self._control.moveCursor(QtGui.QTextCursor.EndOfBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     intercepted = True
 
                 # Regular left movement
@@ -1339,12 +1339,11 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
 
             elif key == QtCore.Qt.Key_Right:
                 original_block_number = cursor.blockNumber()
-                self._control.moveCursor(QtGui.QTextCursor.Right,
-                                mode=anchormode)
+                self._control.moveCursor(QtGui.QTextCursor.Right, anchormode)
                 if cursor.blockNumber() != original_block_number:
-                    self._control.moveCursor(QtGui.QTextCursor.Right,
-                                        n=len(self._continuation_prompt),
-                                        mode=anchormode)
+                    self._control.movePosition(QtGui.QTextCursor.Right,
+                                        anchormode,
+                                        len(self._continuation_prompt))
                 intercepted = True
 
             elif key == QtCore.Qt.Key_Home:
