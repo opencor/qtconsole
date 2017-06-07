@@ -86,14 +86,14 @@ class FrontendHighlighter(PygmentsHighlighter):
         """
         old = self.highlighting_on
         self.highlighting_on = True
-        QtGui.QTextBlockUserData.rehighlightBlock(self, block)
+        QtGui.QSyntaxHighlighter.rehighlightBlock(self, block)
         self.highlighting_on = old
 
     def setFormat(self, start, count, format):
         """ Reimplemented to highlight selectively.
         """
         start += self._current_offset
-        QtGui.QTextBlockUserData.setFormat(self, start, count, format)
+        QtGui.QSyntaxHighlighter.setFormat(self, start, count, format)
 
 
 class FrontendWidget(HistoryConsoleWidget, BaseFrontendMixin):
