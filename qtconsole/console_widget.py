@@ -41,10 +41,10 @@ def new_action(text, parent, **kwargs):
     return action
 
 
-def is_letter_or_number(char):
+def is_letter_or_number(charnum):
     """ Returns whether the specified unicode character is a letter or a number.
     """
-    cat = category(char)
+    cat = category(chr(charnum))
     return cat.startswith('L') or cat.startswith('N')
 
 def is_whitespace(char):
