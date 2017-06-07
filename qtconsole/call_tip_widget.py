@@ -212,7 +212,7 @@ class CallTipWidget(QtGui.QLabel):
         """
         commas = depth = 0
         document = self._text_edit.document()
-        char = document.characterAt(position)
+        char = chr(document.characterAt(position))
         # Search until a match is found or a non-printable character is
         # encountered.
         while category(char) != 'Cc' and position > 0:
@@ -227,7 +227,7 @@ class CallTipWidget(QtGui.QLabel):
                     break
                 depth -= 1
             position += 1 if forward else -1
-            char = document.characterAt(position)
+            char = chr(document.characterAt(position))
         else:
             position = -1
         return position, commas

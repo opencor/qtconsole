@@ -750,7 +750,7 @@ class FrontendWidget(HistoryConsoleWidget, BaseFrontendMixin):
         """
         cursor = self._get_cursor()
         cursor.movePosition(QtGui.QTextCursor.Left)
-        if cursor.document().characterAt(cursor.position()) == '(':
+        if chr(cursor.document().characterAt(cursor.position())) == '(':
             # trigger auto call tip on open paren
             self._call_tip()
     
