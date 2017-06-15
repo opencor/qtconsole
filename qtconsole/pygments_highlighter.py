@@ -80,23 +80,23 @@ RegexLexer.get_tokens_unprocessed = get_tokens_unprocessed
 class PygmentsBlockStackStore(object):
     """ Storage for the saved lexer stack associated with each line.
     """
-  _top = -1
-  _store = { }
+    _top = -1
+    _store = { }
 
-  @staticmethod
-  def put(s):
-    PygmentsBlockStackStore._top += 1
-    PygmentsBlockStackStore._store[PygmentsBlockStackStore._top] = s
-    return PygmentsBlockStackStore._top
+    @staticmethod
+    def put(s):
+        PygmentsBlockStackStore._top += 1
+        PygmentsBlockStackStore._store[PygmentsBlockStackStore._top] = s
+        return PygmentsBlockStackStore._top
 
-  @staticmethod
-  def get(n):
-    return PygmentsBlockStackStore._store.get(n)
+    @staticmethod
+    def get(n):
+        return PygmentsBlockStackStore._store.get(n)
 
-  @staticmethod
-  def remove(n):
-    if n in PygmentsBlockStackStore._store:
-        del PygmentsBlockStackStore._store[n]
+    @staticmethod
+    def remove(n):
+        if n in PygmentsBlockStackStore._store:
+            del PygmentsBlockStackStore._store[n]
 
 
 class PygmentsHighlighter(QtGui.QSyntaxHighlighter):
