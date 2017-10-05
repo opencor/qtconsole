@@ -77,22 +77,26 @@ def get_tokens_unprocessed(self, text, stack=('root',)):
 RegexLexer.get_tokens_unprocessed = get_tokens_unprocessed
 
 
-class PygmentsBlockUserData(QtGui.QTextBlockUserData):
-    """ Storage for the user data associated with each line.
+class PygmentsBlockStackStore(object):
+    """ Storage for the saved lexer stack associated with each line.
     """
+    _top = -1
+    _store = { }
 
-    syntax_stack = ('root',)
+    @staticmethod
+    def put(s):
+        PygmentsBlockStackStore._top += 1
+        PygmentsBlockStackStore._store[PygmentsBlockStackStore._top] = s
+        return PygmentsBlockStackStore._top
 
-    def __init__(self, **kwds):
-        for key, value in kwds.items():
-            setattr(self, key, value)
-        QtGui.QTextBlockUserData.__init__(self)
+    @staticmethod
+    def get(n):
+        return PygmentsBlockStackStore._store.get(n)
 
-    def __repr__(self):
-        attrs = ['syntax_stack']
-        kwds = ', '.join([ '%s=%r' % (attr, getattr(self, attr))
-                           for attr in attrs ])
-        return 'PygmentsBlockUserData(%s)' % kwds
+    @staticmethod
+    def remove(n):
+        if n in PygmentsBlockStackStore._store:
+            del PygmentsBlockStackStore._store[n]
 
 
 class PygmentsHighlighter(QtGui.QSyntaxHighlighter):
@@ -119,9 +123,9 @@ class PygmentsHighlighter(QtGui.QSyntaxHighlighter):
     def highlightBlock(self, string):
         """ Highlight a block of text.
         """
-        prev_data = self.currentBlock().previous().userData()
-        if prev_data is not None:
-            self._lexer._saved_state_stack = prev_data.syntax_stack
+        prev_data_id = self.currentBlock().previous().userState()
+        if prev_data_id >= 0:
+            self._lexer._saved_state_stack = PygmentsBlockStackStore.get(prev_data_id)
         elif hasattr(self._lexer, '_saved_state_stack'):
             del self._lexer._saved_state_stack
 
@@ -133,9 +137,9 @@ class PygmentsHighlighter(QtGui.QSyntaxHighlighter):
             index += length
 
         if hasattr(self._lexer, '_saved_state_stack'):
-            data = PygmentsBlockUserData(
-                syntax_stack=self._lexer._saved_state_stack)
-            self.currentBlock().setUserData(data)
+            data_id = PygmentsBlockStackStore.put(self._lexer._saved_state_stack)
+            PygmentsBlockStackStore.remove(self.currentBlock().userState())
+            self.currentBlock().setUserState(data_id)
             # Clean up for the next go-round.
             del self._lexer._saved_state_stack
 
