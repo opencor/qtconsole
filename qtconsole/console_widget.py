@@ -313,7 +313,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         action = QtGui.QAction('Print', None)
         action.setEnabled(True)
         printkey = QtGui.QKeySequence(QtGui.QKeySequence.Print)
-        if printkey.matches(QtGui.QKeySequence("Ctrl+P")) and sys.platform != 'darwin':
+        if printkey == QtGui.QKeySequence("Ctrl+P") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
             printkey = QtGui.QKeySequence("Ctrl+Shift+P")
@@ -333,7 +333,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         action = QtGui.QAction('Select All', None)
         action.setEnabled(True)
         selectall = QtGui.QKeySequence(QtGui.QKeySequence.SelectAll)
-        if selectall.matches(QtGui.QKeySequence("Ctrl+A")) and sys.platform != 'darwin':
+        if selectall == QtGui.QKeySequence("Ctrl+A") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
             selectall = QtGui.QKeySequence("Ctrl+Shift+A")
