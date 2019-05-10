@@ -27,10 +27,24 @@ from .completion_plain import CompletionPlain
 from .kill_ring import QtKillRing
 
 
-def is_letter_or_number(char):
+def new_action(text, parent, **kwargs):
+    action = QtGui.QAction(text, parent)
+    for (k, v) in kwargs.items():
+        if k == 'shortcut':
+            action.setShortcut(QtGui.QKeySequence(v))
+        elif k == 'shortcutContext':
+            action.setShortcutContext(v)
+        elif k == 'statusTip':
+            action.setStatusTip(v)
+        elif k == 'triggered':
+            action.triggered.connect(v)
+    return action
+
+
+def is_letter_or_number(charnum):
     """ Returns whether the specified unicode character is a letter or a number.
     """
-    cat = category(char)
+    cat = category(chr(charnum))
     return cat.startswith('L') or cat.startswith('N')
 
 def is_whitespace(char):
@@ -299,10 +313,10 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         action = QtGui.QAction('Print', None)
         action.setEnabled(True)
         printkey = QtGui.QKeySequence(QtGui.QKeySequence.Print)
-        if printkey.matches("Ctrl+P") and sys.platform != 'darwin':
+        if printkey == QtGui.QKeySequence("Ctrl+P") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
-            printkey = "Ctrl+Shift+P"
+            printkey = QtGui.QKeySequence("Ctrl+Shift+P")
         action.setShortcut(printkey)
         action.setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
         action.triggered.connect(self.print_)
@@ -310,7 +324,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         self.print_action = action
 
         action = QtGui.QAction('Save as HTML/XML', None)
-        action.setShortcut(QtGui.QKeySequence.Save)
+        action.setShortcut(QtGui.QKeySequence(QtGui.QKeySequence.Save))
         action.setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
         action.triggered.connect(self.export_html)
         self.addAction(action)
@@ -319,17 +333,17 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
         action = QtGui.QAction('Select All', None)
         action.setEnabled(True)
         selectall = QtGui.QKeySequence(QtGui.QKeySequence.SelectAll)
-        if selectall.matches("Ctrl+A") and sys.platform != 'darwin':
+        if selectall == QtGui.QKeySequence("Ctrl+A") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
-            selectall = "Ctrl+Shift+A"
+            selectall = QtGui.QKeySequence("Ctrl+Shift+A")
         action.setShortcut(selectall)
         action.setShortcutContext(QtCore.Qt.WidgetWithChildrenShortcut)
         action.triggered.connect(self.select_all_smart)
         self.addAction(action)
         self.select_all_action = action
 
-        self.increase_font_size = QtGui.QAction("Bigger Font",
+        self.increase_font_size = new_action("Bigger Font",
                 self,
                 shortcut=QtGui.QKeySequence.ZoomIn,
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
@@ -337,7 +351,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 triggered=self._increase_font_size)
         self.addAction(self.increase_font_size)
 
-        self.decrease_font_size = QtGui.QAction("Smaller Font",
+        self.decrease_font_size = new_action("Smaller Font",
                 self,
                 shortcut=QtGui.QKeySequence.ZoomOut,
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
@@ -345,9 +359,9 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 triggered=self._decrease_font_size)
         self.addAction(self.decrease_font_size)
 
-        self.reset_font_size = QtGui.QAction("Normal Font",
+        self.reset_font_size = new_action("Normal Font",
                 self,
-                shortcut="Ctrl+0",
+                shortcut=QtGui.QKeySequence("Ctrl+0"),
                 shortcutContext=QtCore.Qt.WidgetWithChildrenShortcut,
                 statusTip="Restore the Normal font size",
                 triggered=self.reset_font)
@@ -460,7 +474,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
             anchor = self._control.anchorAt(event.pos())
             QtGui.QToolTip.showText(event.globalPos(), anchor)
 
-        return super(ConsoleWidget, self).eventFilter(obj, event)
+        return QtGui.QWidget.eventFilter(self, obj, event)
 
     #---------------------------------------------------------------------------
     # 'QWidget' interface
@@ -1022,7 +1036,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 cursor.insertText(prefix)
                 current_pos = cursor.position()
 
-            cursor.movePosition(QtGui.QTextCursor.Left, n=len(prefix))
+            cursor.movePosition(QtGui.QTextCursor.Left, len(prefix))
             self._completion_widget.show_items(cursor, items)
 
 
@@ -1050,15 +1064,15 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
 
         self.cut_action = menu.addAction('Cut', self.cut)
         self.cut_action.setEnabled(self.can_cut())
-        self.cut_action.setShortcut(QtGui.QKeySequence.Cut)
+        self.cut_action.setShortcut(QtGui.QKeySequence(QtGui.QKeySequence.Cut))
 
         self.copy_action = menu.addAction('Copy', self.copy)
         self.copy_action.setEnabled(self.can_copy())
-        self.copy_action.setShortcut(QtGui.QKeySequence.Copy)
+        self.copy_action.setShortcut(QtGui.QKeySequence(QtGui.QKeySequence.Copy))
 
         self.paste_action = menu.addAction('Paste', self.paste)
         self.paste_action.setEnabled(self.can_paste())
-        self.paste_action.setShortcut(QtGui.QKeySequence.Paste)
+        self.paste_action.setShortcut(QtGui.QKeySequence(QtGui.QKeySequence.Paste))
 
         anchor = self._control.anchorAt(pos)
         if anchor:
@@ -1380,9 +1394,9 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 if line > self._get_prompt_cursor().blockNumber() and \
                         col == len(self._continuation_prompt):
                     self._control.moveCursor(QtGui.QTextCursor.PreviousBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     self._control.moveCursor(QtGui.QTextCursor.EndOfBlock,
-                                             mode=anchormode)
+                                             anchormode)
                     intercepted = True
 
                 # Regular left movement
@@ -1392,14 +1406,14 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
             elif key == QtCore.Qt.Key_Right:
                 #original_block_number = cursor.blockNumber()
                 if position == self._get_line_end_pos():
-                    cursor.movePosition(QtGui.QTextCursor.NextBlock, mode=anchormode)
+                    cursor.movePosition(QtGui.QTextCursor.NextBlock, anchormode)
                     cursor.movePosition(QtGui.QTextCursor.Right,
-                                        mode=anchormode,
-                                        n=len(self._continuation_prompt))
+                                        anchormode,
+                                        len(self._continuation_prompt))
                     self._control.setTextCursor(cursor)
                 else:
                     self._control.moveCursor(QtGui.QTextCursor.Right,
-                                             mode=anchormode)
+                                             anchormode)
                 intercepted = True
 
             elif key == QtCore.Qt.Key_Home:

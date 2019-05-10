@@ -424,7 +424,7 @@ class MainWindow(QtGui.QMainWindow):
         self.file_menu.addSeparator()
 
         printkey = QtGui.QKeySequence(QtGui.QKeySequence.Print)
-        if printkey.matches("Ctrl+P") and sys.platform != 'darwin':
+        if printkey == QtGui.QKeySequence("Ctrl+P") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
             printkey = "Ctrl+Shift+P"
@@ -499,7 +499,7 @@ class MainWindow(QtGui.QMainWindow):
         self.edit_menu.addSeparator()
 
         selectall = QtGui.QKeySequence(QtGui.QKeySequence.SelectAll)
-        if selectall.matches("Ctrl+A") and sys.platform != 'darwin':
+        if selectall == QtGui.QKeySequence("Ctrl+A") and sys.platform != 'darwin':
             # Only override the default if there is a collision.
             # Qt ctrl = cmd on OSX, so the match gets a false positive on OSX.
             selectall = "Ctrl+Shift+A"

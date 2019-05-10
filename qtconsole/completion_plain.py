@@ -36,7 +36,7 @@ class CompletionPlain(QtGui.QWidget):
             if etype in( QtCore.QEvent.KeyPress, QtCore.QEvent.FocusOut ):
                 self.cancel_completion()
 
-        return super(CompletionPlain, self).eventFilter(obj, event)
+        return QtGui.QWidget.eventFilter(self, obj, event)
 
     #--------------------------------------------------------------------------
     # 'CompletionPlain' interface

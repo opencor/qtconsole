@@ -86,14 +86,14 @@ class FrontendHighlighter(PygmentsHighlighter):
         """
         old = self.highlighting_on
         self.highlighting_on = True
-        super(FrontendHighlighter, self).rehighlightBlock(block)
+        QtGui.QSyntaxHighlighter.rehighlightBlock(self, block)
         self.highlighting_on = old
 
     def setFormat(self, start, count, format):
         """ Reimplemented to highlight selectively.
         """
         start += self._current_offset
-        super(FrontendHighlighter, self).setFormat(start, count, format)
+        QtGui.QSyntaxHighlighter.setFormat(self, start, count, format)
 
 
 class FrontendWidget(HistoryConsoleWidget, BaseFrontendMixin):
@@ -301,8 +301,7 @@ class FrontendWidget(HistoryConsoleWidget, BaseFrontendMixin):
         """
         menu = super(FrontendWidget, self)._context_menu_make(pos)
         for before_action in menu.actions():
-            if before_action.shortcut().matches(QtGui.QKeySequence.Paste) == \
-                    QtGui.QKeySequence.ExactMatch:
+            if before_action.shortcut() == QtGui.QKeySequence.Paste:
                 menu.insertAction(before_action, self._copy_raw_action)
                 break
         return menu
@@ -707,7 +706,7 @@ class FrontendWidget(HistoryConsoleWidget, BaseFrontendMixin):
         """
         cursor = self._get_cursor()
         cursor.movePosition(QtGui.QTextCursor.Left)
-        if cursor.document().characterAt(cursor.position()) == '(':
+        if chr(cursor.document().characterAt(cursor.position())) == '(':
             # trigger auto call tip on open paren
             self._call_tip()
 
