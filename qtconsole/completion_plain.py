@@ -56,5 +56,5 @@ class CompletionPlain(QtGui.QWidget):
         strng = text.columnize(items)
         # Move cursor to start of the prefix to replace it
         # when a item is selected
-        cursor.movePosition(QtGui.QTextCursor.Left, n=prefix_length)
+        cursor.movePosition(QtGui.QTextCursor.Left, prefix_length)
         self._console_widget._fill_temporary_buffer(cursor, strng, html=False)

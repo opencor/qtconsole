@@ -124,7 +124,7 @@ class CompletionWidget(QtGui.QListWidget):
 
         # Move cursor to start of the prefix to replace it
         # when a item is selected
-        cursor.movePosition(QtGui.QTextCursor.Left, n=prefix_length)
+        cursor.movePosition(QtGui.QTextCursor.Left, prefix_length)
         self._start_position = cursor.position()
         self.setCurrentRow(0)
         self.raise_()

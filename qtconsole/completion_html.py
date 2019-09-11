@@ -304,7 +304,7 @@ class CompletionHtml(QtGui.QWidget):
             return
         # Move cursor to start of the prefix to replace it
         # when a item is selected
-        cursor.movePosition(QtGui.QTextCursor.Left, n=prefix_length)
+        cursor.movePosition(QtGui.QTextCursor.Left, prefix_length)
         self._start_position = cursor.position()
         self._consecutive_tab = 1
         # Calculate the number of characters available.

@@ -1047,8 +1047,7 @@ class ConsoleWidget(MetaQObjectHasTraits('NewBase', (LoggingConfigurable, superQ
                 cursor.insertText(prefix)
                 current_pos = cursor.position()
 
-            cursor.movePosition(QtGui.QTextCursor.Left, len(prefix))
-            self._completion_widget.show_items(cursor, items)
+            self._completion_widget.show_items(cursor, items, len(prefix))
 
 
     def _fill_temporary_buffer(self, cursor, text, html=False):
