@@ -71,6 +71,13 @@ class QtInProcessKernelClient(QtKernelClientMixin, InProcessKernelClient):
     stdin_channel_class = Type(QtInProcessChannel)
     hb_channel_class = Type(QtInProcessHBChannel)
 
+    def start_channels(self, *args, **kw):
+        """ Reimplemented to not assign a comm's mmanager
+        """
+        super(QtKernelClientMixin, self).start_channels(*args, **kw)
+        self.started_channels.emit()
+
+
 class QtInProcessKernelManager(QtKernelManagerMixin, InProcessKernelManager):
     client_class = __module__ + '.QtInProcessKernelClient'
 
